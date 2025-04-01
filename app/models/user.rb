@@ -11,8 +11,8 @@ class User < ApplicationRecord
   validates :date, presence: true
 
   # パスワードの形式バリデーション（英字と数字の混合）
-  validates :password, format: { with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+\z/, message: "is invalid" }, if: :password_required?
-  
+  validates :password, format: { with: /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+\z/, message: 'is invalid' }, if: :password_required?
+
   # password_required? メソッドを使って、新規登録時のパスワード確認を正しく行う
   def password_required?
     new_record? || password.present?
