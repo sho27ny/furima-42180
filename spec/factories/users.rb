@@ -11,10 +11,3 @@ FactoryBot.define do
     date                  { '2000-01-01' }
   end
 end
-
-# "Nickname can't be blank",
-# "Last name can't be blank",
-# "First name can't be blank",
-# "Last name kana can't be blank",
-# "First name kana can't be blank",
-# "Date can't be blank"]
