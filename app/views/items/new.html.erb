@@ -7,10 +7,7 @@
     <h2 class="items-sell-title">商品の情報を入力</h2>
     <%= form_with model: @item, local: true do |f| %>
 
-    <%# インスタンスを渡して、エラー発生時にメッセージが表示されるようにしましょう。%>
     <%= render 'shared/error_messages', model:@item %>
-    <%# //インスタンスを渡して、エラー発生時にメッセージが表示されるようにしましょう。%>
-
     <%# 商品画像 %>
     <div class="img-upload">
       <div class="weight-bold-text">
@@ -156,4 +153,5 @@
       ©︎Furima,Inc.
     </p>
   </footer>
+<%= javascript_include_tag "item_price", "data-turbo-track": "reload" %>
 </div>
