@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update]
+  before_action :set_item, only: [:show, :edit, :update]
   before_action :move_to_index, only: [:edit, :update]
 
   def index
@@ -20,15 +21,12 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find(params[:id])
   end
 
   def edit
-    @item = Item.find(params[:id])
   end
 
   def update
-    @item = Item.find(params[:id])
     if @item.update(item_params)
       redirect_to item_path
     else
@@ -42,18 +40,12 @@ class ItemsController < ApplicationController
     params.require(:item).permit(:name, :description, :price, :image,:category_id, :condition_id, :shipping_cost_id, :prefecture_id, :shipping_time_id).merge(user_id: current_user.id)
   end
 
-  def move_to_index
+  def set_item
     @item = Item.find(params[:id])
-  
-    # ログインしていない場合、ログインページにリダイレクト
-    unless user_signed_in?
-      redirect_to new_user_session_path
-    else
-      # ログインしている場合、かつ自身が出品した商品でない場合
-      if @item.user != current_user
-        redirect_to root_path
-      end
-    end
+  end
+
+  def move_to_index
+    redirect_to root_path if @item.user != current_user
   end
 
 end
