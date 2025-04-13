@@ -1,22 +1,30 @@
 class OrdersController < ApplicationController
+  before_action :set_item, only: [:index, :create]
+
   def index
-    @orders = current_user.orders
+    @order_address = OrderAddress.new
   end
 
   def create
-    @order = current_user.orders.build(order_params)
-    @order.item = Item.find(params[:item_id])
+    @order_address = OrderAddress.new(order_address_params)
+    @order_address.item = @item
+    @order_address.user = current_user
 
-    if @order.save
-      redirect_to @order, notice: '注文が完了しました'
+    if @order_address.valid?
+      @order_address.save
+      redirect_to root_path
     else
-      render :new
+      render :index
     end
   end
 
   private
 
-  def order_params
-    params.require(:order).permit(:item_id)
+  def set_item
+    @item = Item.find(params[:item_id])
+  end
+
+  def order_address_params
+    params.require(:order_address).permit(:postal_code, :prefecture_id, :city, :address, :building_name, :phone_number)
   end
 end
