@@ -2,7 +2,6 @@ class OrdersController < ApplicationController
   before_action :set_item, only: [:index, :create]
 
   def index
-    @item = Item.find(params[:item_id])
     @order_address = OrderAddress.new
   end
 
@@ -13,12 +12,12 @@ class OrdersController < ApplicationController
   
     if @order_address.valid?
       if @order_address.save
-        redirect_to root_path, notice: '購入が完了しました'
+        redirect_to root_path
       else
-        render :index
+        render :index, status: :unprocessable_entity
       end
     else
-      render :index
+      render :index, status: :unprocessable_entity
     end
   end
 
