@@ -20,6 +20,12 @@ RSpec.describe OrderAddress, type: :model do
   end
 
   describe '内容に問題があるとき' do
+    it "tokenが空では登録できないこと" do
+      @order_address.token = ''
+      @order_address.valid?
+      expect(@order_address.errors.full_messages).to include("Token can't be blank")
+    end
+
     it '郵便番号が空だと保存できない' do
       @order_address.postal_code = ''
       @order_address.valid?

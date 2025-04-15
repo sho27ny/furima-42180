@@ -9,7 +9,7 @@ class OrderAddress
                 with_options presence: true do
                   validates :user_id
                   validates :item_id
-                  # validates :token ← 今はスキップでOK
+                  validates :token 
                   validates :postal_code, format: { with: /\A\d{3}-\d{4}\z/, message: 'is invalid. Enter it as follows (e.g. 123-4567)' }
                   validates :prefecture_id, presence: true, numericality: { other_than: 1, message: "can't be blank" }
                   validates :city
