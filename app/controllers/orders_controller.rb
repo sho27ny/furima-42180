@@ -15,15 +15,11 @@ class OrdersController < ApplicationController
     @order_address.user_id = current_user.id
     if @order_address.valid?
       pay_item
-      if @order_address.save
-        redirect_to root_path
+      @order_address.save
+      redirect_to root_path
       else
         gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
         render :index, status: :unprocessable_entity
-      end
-    else
-      gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
-      render :index, status: :unprocessable_entity
     end
   end
 
