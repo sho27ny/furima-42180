@@ -1,5 +1,8 @@
 class OrdersController < ApplicationController
   before_action :set_item, only: [:index, :create]
+  before_action :authenticate_user!
+  before_action :prevent_seller_purchase, only: [:index, :create]
+  before_action :redirect_if_sold, only: [:index, :create]
 
   def index
     gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
@@ -10,7 +13,6 @@ class OrdersController < ApplicationController
     @order_address = OrderAddress.new(order_address_params)
     @order_address.item_id = @item.id
     @order_address.user_id = current_user.id
-  
     if @order_address.valid?
       pay_item
       if @order_address.save
@@ -20,6 +22,7 @@ class OrdersController < ApplicationController
         render :index, status: :unprocessable_entity
       end
     else
+      gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
       render :index, status: :unprocessable_entity
     end
   end
@@ -37,9 +40,17 @@ class OrdersController < ApplicationController
   def pay_item
     Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
     Payjp::Charge.create(
-      amount: @item.price,         # ← DBから商品価格
-      card: params[:token],        # ← トークンをparamsから
-      currency: 'jpy'                 # 通貨の種類（日本円）
+      amount: @item.price,
+      card: params[:token],
+      currency: 'jpy'
     )
+  end
+
+  def prevent_seller_purchase
+    redirect_to root_path if current_user == @item.user
+  end
+
+  def redirect_if_sold
+    redirect_to root_path if @item.order.present?
   end
 end
